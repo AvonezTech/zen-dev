@@ -7,6 +7,7 @@ use App\Enums\Project\ProjectStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Support\Str;
 
 class Project extends Model
 {
@@ -32,6 +33,13 @@ class Project extends Model
             'budget' => 'decimal:2',
             'archived_at' => 'datetime',
         ];
+    }
+
+    protected static function booted()
+    {
+        static::creating(function(Project $project){
+            $project->slug = Str::slug($this->name) . '-' . Str::random(8);
+        });
     }
 
     // Relationships
