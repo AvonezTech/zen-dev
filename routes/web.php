@@ -1,7 +1,10 @@
 <?php
 
+use Filament\Facades\Filament;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::redirect(
+    '/',
+    Filament::getPanel('project-management')
+        ->getUrl()
+);
