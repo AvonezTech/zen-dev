@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf5d606086a84d3d1b0ecf1122fd0619",
+    "content-hash": "656d3f857616e58957e8f649d9a1fae0",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -509,6 +509,77 @@
                 }
             ],
             "time": "2024-07-16T11:13:48+00:00"
+        },
+        {
+            "name": "codeat3/blade-phosphor-icons",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/codeat3/blade-phosphor-icons.git",
+                "reference": "2812a27ec642359344429d344c7f7bbdfad489ce"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/codeat3/blade-phosphor-icons/zipball/2812a27ec642359344429d344c7f7bbdfad489ce",
+                "reference": "2812a27ec642359344429d344c7f7bbdfad489ce",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.1",
+                "illuminate/support": "^8.0|^9.0|^10.0|^11.0|^12.0",
+                "php": "^7.4|^8.0"
+            },
+            "require-dev": {
+                "codeat3/blade-icon-generation-helpers": "^0.10",
+                "codeat3/phpcs-styles": "^1.0",
+                "orchestra/testbench": "^6.0|^7.0|^8.0|^9.0|^10.0",
+                "phpunit/phpunit": "^9.0|^10.5|^11.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Codeat3\\BladePhosphorIcons\\BladePhosphorIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Codeat3\\BladePhosphorIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Swapnil Sarwe",
+                    "homepage": "https://swapnilsarwe.com"
+                },
+                {
+                    "name": "Dries Vints",
+                    "homepage": "https://driesvints.com"
+                }
+            ],
+            "description": "A package to easily make use of \"Phosphor Icons\" in your Laravel Blade views.",
+            "homepage": "https://github.com/codeat3/blade-phosphor-icons",
+            "keywords": [
+                "blade",
+                "laravel",
+                "phosphor-icons"
+            ],
+            "support": {
+                "issues": "https://github.com/codeat3/blade-phosphor-icons/issues",
+                "source": "https://github.com/codeat3/blade-phosphor-icons/tree/2.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/swapnilsarwe",
+                    "type": "github"
+                }
+            ],
+            "time": "2025-02-25T06:29:09+00:00"
         },
         {
             "name": "danharrin/date-format-converter",
@@ -7885,6 +7956,136 @@
                 "source": "https://github.com/tijsverkoyen/CssToInlineStyles/tree/v2.4.0"
             },
             "time": "2025-12-02T11:56:42+00:00"
+        },
+        {
+            "name": "tonegabes/filament-better-options",
+            "version": "1.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tonegabes/filament-better-options.git",
+                "reference": "c9b10753e5bbb572d073a8b5ff2efa53ae70052b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tonegabes/filament-better-options/zipball/c9b10753e5bbb572d073a8b5ff2efa53ae70052b",
+                "reference": "c9b10753e5bbb572d073a8b5ff2efa53ae70052b",
+                "shasum": ""
+            },
+            "require": {
+                "filament/forms": "^5.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0",
+                "tonegabes/filament-phosphor-icons": "^1.3"
+            },
+            "require-dev": {
+                "friendsofphp/php-cs-fixer": "^3.86",
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.0",
+                "phpstan/phpstan-deprecation-rules": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ToneGabes\\BetterOptions\\BetterOptionsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ToneGabes\\BetterOptions\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tone Gabes",
+                    "email": "tonegabes@gmail.com",
+                    "homepage": "https://tonegabes.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Filament form components for better radio and checkbox options.",
+            "homepage": "https://github.com/tonegabes/filament-better-options",
+            "keywords": [
+                "Forms",
+                "checkbox",
+                "filament",
+                "laravel",
+                "php",
+                "plugin",
+                "tonegabes"
+            ],
+            "support": {
+                "issues": "https://github.com/tonegabes/filament-better-options/issues",
+                "source": "https://github.com/tonegabes/filament-better-options"
+            },
+            "time": "2026-02-06T17:20:37+00:00"
+        },
+        {
+            "name": "tonegabes/filament-phosphor-icons",
+            "version": "1.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/tonegabes/filament-phosphor-icons.git",
+                "reference": "0e40e2faf14ccf4f6c73dde1682064147a767eb2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/tonegabes/filament-phosphor-icons/zipball/0e40e2faf14ccf4f6c73dde1682064147a767eb2",
+                "reference": "0e40e2faf14ccf4f6c73dde1682064147a767eb2",
+                "shasum": ""
+            },
+            "require": {
+                "codeat3/blade-phosphor-icons": "^2.3",
+                "filament/filament": "^4.0|^5.0",
+                "php": "^8.1"
+            },
+            "require-dev": {
+                "laravel/pint": "^1.22"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "ToneGabes\\Filament\\Icons\\PhosphorIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "ToneGabes\\Filament\\Icons\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tone Gabes",
+                    "email": "tonegabes@gmail.com",
+                    "homepage": "https://tonegabes.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Phosphor Icons Pack ready for Filament 4",
+            "keywords": [
+                "Iconset",
+                "Phosphor",
+                "filament",
+                "icons",
+                "laravel",
+                "library"
+            ],
+            "support": {
+                "issues": "https://github.com/tonegabes/filament-phosphor-icons/issues",
+                "source": "https://github.com/tonegabes/filament-phosphor-icons/tree/1.3.0"
+            },
+            "time": "2026-02-06T15:06:43+00:00"
         },
         {
             "name": "ueberdosis/tiptap-php",
