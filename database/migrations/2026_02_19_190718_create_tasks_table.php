@@ -23,12 +23,13 @@ return new class extends Migration
             $table->string('status');
             $table->string('priority');
             $table->unsignedInteger('estimated_days');
-            $table->unsignedInteger('actual_days');
-            $table->longText('descritption');
+            $table->longText('description');
             $table->foreignIdFor(User::class, 'assigned_to_id');
             $table->date('start_date');
             $table->date('due_date');
-            $table->timestamp('completed_at');
+            $table->timestamp('completed_at')
+                ->nullable()
+                ->default(null);
             $table->flowforgePositionColumn('position'); // Handles database-specific collations automatically
             $table->timestamps();
         });

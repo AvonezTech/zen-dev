@@ -3,6 +3,7 @@
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 
@@ -13,6 +14,12 @@ class ViewProject extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('tasks')
+                ->url(
+                    ProjectTaskBoard::getUrl([
+                        'record' => $this->getRecord()
+                    ])
+                ),
             EditAction::make(),
         ];
     }

@@ -7,6 +7,7 @@ use App\Enums\Project\ProjectStatus;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Str;
 
 class Project extends Model
@@ -35,10 +36,10 @@ class Project extends Model
         ];
     }
 
-    protected static function booted()
+    protected static function booted(): void
     {
         static::creating(function(Project $project){
-            $project->slug = Str::slug($this->name) . '-' . Str::random(8);
+            $project->slug = Str::slug($project->name) . '-' . Str::random(8);
         });
     }
 
@@ -56,5 +57,10 @@ class Project extends Model
             ->withPivot([
                 'role'
             ]);
+    }
+
+    public function tasks(): HasMany
+    {
+        return $this->hasMany(Task::class);
     }
 }
