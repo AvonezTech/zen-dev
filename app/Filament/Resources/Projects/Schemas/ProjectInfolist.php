@@ -2,6 +2,8 @@
 
 namespace App\Filament\Resources\Projects\Schemas;
 
+use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
 
@@ -19,14 +21,26 @@ class ProjectInfolist
                     ->badge(),
                 TextEntry::make('client.name')
                     ->label('Client'),
-                TextEntry::make('user_id')
+                TextEntry::make('budget')
                     ->numeric(),
+
+                RepeatableEntry::make('projectUsers')
+                    ->label("Members")
+                    ->columnSpanFull()
+                    ->table([
+                        TableColumn::make('User'),
+                        TableColumn::make('Role'),
+                    ])
+                    ->schema([
+                        TextEntry::make('user.name'),
+                        TextEntry::make('role'),
+                    ]),
+
                 TextEntry::make('start_date')
                     ->date(),
                 TextEntry::make('end_date')
                     ->date(),
-                TextEntry::make('budget')
-                    ->numeric(),
+
                 TextEntry::make('archived_at')
                     ->dateTime()
                     ->placeholder('-'),

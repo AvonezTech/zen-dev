@@ -17,7 +17,6 @@ enum TaskStatus: string implements HasLabel, HasColor
     case IN_PROGRESS = 'in-progress';
     case REVIEW = 'review';
     case COMPLETED = 'completed';
-    case BLOCKED = 'blocked';
     case CANCELLED = 'cancelled';
 
     public function getColor(): string | array | null
@@ -27,7 +26,6 @@ enum TaskStatus: string implements HasLabel, HasColor
             self::IN_PROGRESS => Color::Blue,
             self::REVIEW => Color::Amber,
             self::COMPLETED => Color::Green,
-            self::BLOCKED => Color::Red,
             self::CANCELLED => Color::Red,
         };
     }

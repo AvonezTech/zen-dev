@@ -5,6 +5,8 @@ namespace App\Filament\Resources\Projects\Schemas;
 use App\Enums\Project\ProjectPriority;
 use App\Enums\Project\ProjectStatus;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Repeater;
+use Filament\Forms\Components\Repeater\TableColumn;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
@@ -47,6 +49,31 @@ class ProjectForm
                             ->required(),
                         DatePicker::make('end_date')
                             ->required(),
+                    ]),
+
+                Section::make('Members')
+                    ->compact()
+                    ->columnSpanFull()
+                    ->schema([
+                        Repeater::make('projectUsers')
+                            ->hiddenLabel()
+                            ->relationship('projectUsers')
+                            ->columns(2)
+                            ->addActionLabel("Add Member")
+                            ->table([
+                                TableColumn::make('User'),
+                                TableColumn::make('Role'),
+                            ])
+                            ->schema([
+                                Select::make('user_id')
+                                    ->label("User")
+                                    ->relationship('user', 'name')
+                                    ->preload()
+                                    ->required()
+                                    ->searchable(),
+                                TextInput::make('role')
+                                    ->required(),
+                            ]),
                     ]),
 
                 Section::make('Options')

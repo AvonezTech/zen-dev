@@ -59,6 +59,11 @@ class Project extends Model
             ]);
     }
 
+    public function projectUsers(): HasMany
+    {
+        return $this->hasMany(ProjectUser::class);
+    }
+
     public function tasks(): HasMany
     {
         return $this->hasMany(Task::class);

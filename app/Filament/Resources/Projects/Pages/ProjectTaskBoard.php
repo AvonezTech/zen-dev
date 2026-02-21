@@ -2,24 +2,20 @@
 
 namespace App\Filament\Resources\Projects\Pages;
 
-use App\Enums\Task\TaskPriority;
 use App\Enums\Task\TaskStatus;
+use App\Filament\Actions\Tasks\CreateNewTaskAction;
+use App\Filament\Actions\Tasks\EditTaskAction;
+use App\Filament\Actions\Tasks\ViewTaskAction;
 use App\Filament\Resources\Projects\ProjectResource;
 use App\Models\Task;
-use App\Models\User;
 use Filament\Actions\Action;
-use Filament\Forms\Components\DatePicker;
-use Filament\Forms\Components\RichEditor;
-use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
+use Filament\Actions\ActionGroup;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Notifications\Notification;
 use Filament\Pages\Concerns\InteractsWithHeaderActions;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
-use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Facades\Log;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardResourcePage;
 use Relaticle\Flowforge\Column;
@@ -40,72 +36,23 @@ class ProjectTaskBoard extends BoardResourcePage
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('newTask')
-                ->outlined()
-                ->slideOver()
-                ->color('info')
-                ->icon(Heroicon::OutlinedPlus)
-                ->modalIcon(Heroicon::OutlinedPlus)
-                ->schema([
-                    Section::make()
-                        ->contained(false)
-                        ->columns(2)
-                        ->schema([
-                            TextInput::make('title')
-                                ->columnSpanFull()
-                                ->required(),
-                            Select::make('status')
-                                ->options(TaskStatus::class)
-                                ->required(),
-                            Select::make('priority')
-                                ->options(TaskPriority::class)
-                                ->required(),
-                            Select::make('assigned_to_id')
-                                ->label('AssignedTo')
-                                ->options(
-                                    User::pluck('name', 'id')
-                                )
-                                ->preload()
-                                ->searchable()
-                                ->required(),
-                            TextInput::make('estimated_days')
-                                ->numeric()
-                                ->required(),
-                            DatePicker::make('start_date')
-                                ->required()
-                                ->default(now()),
-                            DatePicker::make('due_date')
-                                ->required(),
-                            RichEditor::make('description')
-                                ->columnSpanFull()
-                                ->required(),
-                        ]),
-                ])
-                ->action(function (array $data) {
-                    try {
-                        $data['project_id'] = $this->getRecord()?->id;
-                        Task::create($data);
-                        Notification::make()
-                            ->title('Success')
-                            ->body("New task added")
-                            ->success()
-                            ->send();
-                    } catch (\Throwable $th) {
-                        Log::error("Failed to create task", [
-                            'data' => $data,
-                            'error' => [
-                                'code' => $th->getCode(),
-                                'message' => $th->getMessage(),
-                                'trace' => $th->getTrace()
-                            ]
-                        ]);
-                        Notification::make()
-                            ->title('Failed')
-                            ->body("Failed to add new task")
-                            ->danger()
-                            ->send();
-                    }
-                }),
+            CreateNewTaskAction::make([
+                'project_id' => $this->getRecord()?->id
+            ]),
+            ActionGroup::make([
+                Action::make('view')
+                    ->outlined()
+                    ->icon(Heroicon::OutlinedViewfinderCircle)
+                    ->url(ViewProject::getUrl([
+                        'record' => $this->getRecord()
+                    ])),
+                Action::make('edit')
+                    ->outlined()
+                    ->icon(Heroicon::OutlinedPencilSquare)
+                    ->url(EditProject::getUrl([
+                        'record' => $this->getRecord()
+                    ])),
+            ]),
         ];
     }
 
@@ -129,17 +76,30 @@ class ProjectTaskBoard extends BoardResourcePage
                     ->values()
                     ->toArray(),
             )
+            ->cardActions([
+                EditTaskAction::make(),
+                ViewTaskAction::make(),
+            ])
+            ->cardAction('viewTask')
             ->cardSchema(function (Schema $schema) {
                 return $schema
-                    ->columns(2)
                     ->components([
                         TextEntry::make('assignedTo.name')
                             ->badge()
+                            ->prefix('@')
+                            ->columnSpanFull()
                             ->hiddenLabel(),
-                        TextEntry::make('due_date')
-                            ->hiddenLabel()
-                            ->badge()
-                            ->date(),
+                        Grid::make(2)
+                            ->gap(false)
+                            ->schema([
+                                TextEntry::make('due_date')
+                                    ->hiddenLabel()
+                                    ->badge()
+                                    ->date(),
+                                TextEntry::make('priority')
+                                    ->hiddenLabel()
+                                    ->badge(),
+                            ]),
                     ]);
             });
     }

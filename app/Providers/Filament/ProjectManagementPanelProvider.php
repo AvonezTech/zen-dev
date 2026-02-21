@@ -27,6 +27,7 @@ class ProjectManagementPanelProvider extends PanelProvider
             ->default()
             ->id('project-management')
             ->path('project-management')
+            ->sidebarCollapsibleOnDesktop()
             ->viteTheme('resources/css/filament/project-management/theme.css')
             ->login()
             ->colors([
