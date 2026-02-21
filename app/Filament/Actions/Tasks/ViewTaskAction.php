@@ -8,6 +8,8 @@ use Closure;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
+use Filament\Support\Enums\FontWeight;
+use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
 
 class ViewTaskAction extends BaseAction
@@ -41,6 +43,8 @@ class ViewTaskAction extends BaseAction
     {
         return [
             TextEntry::make('title')
+                ->weight(FontWeight::Bold)
+                ->size(TextSize::Large)
                 ->hiddenLabel(),
             Grid::make(2)
                 ->schema([
@@ -53,6 +57,9 @@ class ViewTaskAction extends BaseAction
                 ]),
             TextEntry::make('description')
                 ->hiddenLabel()
+                ->extraAttributes([
+                    'class' => 'border p-2 rounded'
+                ])
                 ->html(),
         ];
     }
