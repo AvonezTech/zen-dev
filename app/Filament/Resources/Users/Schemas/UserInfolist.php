@@ -14,6 +14,8 @@ class UserInfolist
                 TextEntry::make('name'),
                 TextEntry::make('email')
                     ->label('Email address'),
+                TextEntry::make('mobile_number'),
+                TextEntry::make('github_username'),
                 TextEntry::make('email_verified_at')
                     ->dateTime()
                     ->placeholder('-'),
@@ -23,8 +25,6 @@ class UserInfolist
                 TextEntry::make('updated_at')
                     ->dateTime()
                     ->placeholder('-'),
-                TextEntry::make('mobile_number'),
-                TextEntry::make('github_username'),
             ]);
     }
 }
