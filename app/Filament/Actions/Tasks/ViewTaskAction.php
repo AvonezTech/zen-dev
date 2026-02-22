@@ -11,6 +11,7 @@ use Filament\Schemas\Components\Grid;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
+use Tilto\Commentable\Filament\Infolists\Components\CommentsEntry;
 
 class ViewTaskAction extends BaseAction
 {
@@ -61,6 +62,10 @@ class ViewTaskAction extends BaseAction
                     'class' => 'border p-2 rounded'
                 ])
                 ->html(),
+
+            CommentsEntry::make('comments')
+                ->buttonPosition('right')
+                ->nestable(),
         ];
     }
 
