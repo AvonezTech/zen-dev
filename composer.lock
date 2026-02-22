@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8e69c7b650b1875d304fa9f5dffbe5a9",
+    "content-hash": "80dc2737556d6ae9bb6705e1012312c2",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -281,6 +281,86 @@
                 }
             ],
             "time": "2026-02-10T14:33:43+00:00"
+        },
+        {
+            "name": "businesstilto/commentable",
+            "version": "v0.3.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/businesstilto/commentable.git",
+                "reference": "46419b50049649995a07edbf1cda89b7b6d63280"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/businesstilto/commentable/zipball/46419b50049649995a07edbf1cda89b7b6d63280",
+                "reference": "46419b50049649995a07edbf1cda89b7b6d63280",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-heroicons": "^2.6",
+                "davidhsianturi/blade-bootstrap-icons": "^2.1",
+                "filament/filament": "^4.5 || ^5.0",
+                "php": "^8.2",
+                "spatie/laravel-package-tools": "^1.15.0"
+            },
+            "require-dev": {
+                "larastan/larastan": "^3.0",
+                "laravel/pint": "^1.0",
+                "nunomaduro/collision": "^8.12",
+                "orchestra/testbench": "^9.0",
+                "pestphp/pest": "^4.1",
+                "pestphp/pest-plugin-arch": "^4.0",
+                "pestphp/pest-plugin-laravel": "^4.0",
+                "phpstan/extension-installer": "^1.1",
+                "phpstan/phpstan-deprecation-rules": "^2.0",
+                "phpstan/phpstan-phpunit": "^2.0"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "aliases": {
+                        "Commentable": "Tilto\\Commentable\\Facades\\Commentable"
+                    },
+                    "providers": [
+                        "Tilto\\Commentable\\CommentableServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Tilto\\Commentable\\": "src/",
+                    "Tilto\\Commentable\\Database\\Factories\\": "database/factories/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matilda Smets",
+                    "email": "info@tilto.nl",
+                    "role": "Developer"
+                }
+            ],
+            "description": "An extensive and very customizable package that adds commenting in Filament v4.5 and newer.",
+            "homepage": "https://github.com/businesstilto/commentable",
+            "keywords": [
+                "businesstilto",
+                "commentable",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/businesstilto/commentable/issues",
+                "source": "https://github.com/businesstilto/commentable"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/businesstilto",
+                    "type": "github"
+                }
+            ],
+            "time": "2026-02-18T12:12:57+00:00"
         },
         {
             "name": "carbonphp/carbon-doctrine-types",
@@ -685,6 +765,67 @@
                 }
             ],
             "time": "2025-02-21T08:52:11+00:00"
+        },
+        {
+            "name": "davidhsianturi/blade-bootstrap-icons",
+            "version": "v2.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/davidhsianturi/blade-bootstrap-icons.git",
+                "reference": "e4480e75c4c3b0b350dd8f3acf3dfc1bd9eb560f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/davidhsianturi/blade-bootstrap-icons/zipball/e4480e75c4c3b0b350dd8f3acf3dfc1bd9eb560f",
+                "reference": "e4480e75c4c3b0b350dd8f3acf3dfc1bd9eb560f",
+                "shasum": ""
+            },
+            "require": {
+                "blade-ui-kit/blade-icons": "^1.6",
+                "illuminate/support": "^9.0|^10.0|^11.0|^12.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.0|^8.0|^9.0|^10.1",
+                "phpunit/phpunit": "^9.0|^10.5|^11.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "Davidhsianturi\\BladeBootstrapIcons\\BladeBootstrapIconsServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Davidhsianturi\\BladeBootstrapIcons\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "David H. Sianturi",
+                    "email": "davidhsianturi@gmail.com",
+                    "homepage": "https://davidhsianturi.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "A package to easily make use of Bootstrap Icons in your Laravel Blade views.",
+            "homepage": "https://github.com/davidhsianturi/blade-bootstrap-icons",
+            "keywords": [
+                "Bootstrap Icons",
+                "blade",
+                "laravel"
+            ],
+            "support": {
+                "issues": "https://github.com/davidhsianturi/blade-bootstrap-icons/issues",
+                "source": "https://github.com/davidhsianturi/blade-bootstrap-icons/tree/v2.1.0"
+            },
+            "time": "2025-06-18T12:39:09+00:00"
         },
         {
             "name": "dflydev/dot-access-data",
