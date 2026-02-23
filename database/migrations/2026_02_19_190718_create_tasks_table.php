@@ -25,8 +25,12 @@ return new class extends Migration
             $table->unsignedInteger('estimated_days');
             $table->longText('description');
             $table->foreignIdFor(User::class, 'assigned_to_id');
-            $table->date('start_date');
-            $table->date('due_date');
+            $table->date('start_date')
+                ->nullable()
+                ->default(null);
+            $table->date('due_date')
+                ->nullable()
+                ->default(null);
             $table->timestamp('completed_at')
                 ->nullable()
                 ->default(null);

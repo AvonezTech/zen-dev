@@ -3,11 +3,16 @@
 namespace App\Filament\Actions\Tasks;
 
 use App\Filament\Actions\BaseAction;
+use App\Filament\Infolists\Components\SubTaskEntry;
 use App\Models\Task;
 use Closure;
 use Filament\Actions\Action;
+use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs;
+use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
@@ -63,9 +68,23 @@ class ViewTaskAction extends BaseAction
                 ])
                 ->html(),
 
-            CommentsEntry::make('comments')
-                ->buttonPosition('right')
-                ->nestable(),
+            Tabs::make()
+                ->contained(false)
+                ->tabs([
+                    Tab::make('Sub Tasks')
+                        ->schema([
+                            SubTaskEntry::make('subTasks'),
+                        ]),
+                    Tab::make('Comments')
+                        ->schema([
+                            CommentsEntry::make('comments')
+                                ->buttonPosition('right')
+                                ->mentions()
+                                ->nestable(),
+                        ]),
+                ]),
+
+
         ];
     }
 

@@ -19,11 +19,22 @@ use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Log;
 
-class CreateNewTaskAction extends BaseAction
+class CreateNewSubTaskAction extends BaseAction
 {
     protected static function name(array $bindings): string
     {
-        return 'newTask';
+        return 'newSubTask';
+    }
+
+    protected static function mutateFilamentAction(Action $filamentAction): Action
+    {
+        return $filamentAction
+            ->outlined()
+            ->slideOver()
+            ->color('info')
+            ->icon(Heroicon::OutlinedPlus)
+            ->modalIcon(Heroicon::OutlinedPlus)
+            ->overlayParentActions();
     }
 
     protected static function bindingRules(): array
@@ -33,18 +44,11 @@ class CreateNewTaskAction extends BaseAction
                 'required',
                 'exists:projects,id'
             ],
+            'parent_id' => [
+                'required',
+                'exists:tasks,id'
+            ]
         ];
-    }
-
-    protected static function mutateFilamentAction(Action $filamentAction): Action
-    {
-        return $filamentAction
-            ->outlined()
-            ->slideOver()
-            ->modalWidth(Width::Screen)
-            ->color('info')
-            ->icon(Heroicon::OutlinedPlus)
-            ->modalIcon(Heroicon::OutlinedPlus);
     }
 
     protected static function schema(array $bindings): array|Closure
@@ -89,6 +93,7 @@ class CreateNewTaskAction extends BaseAction
     protected static function action(array $bindings): Closure
     {
         return function (array $data) use ($bindings) {
+            dd($data);
             try {
                 $data['project_id'] = $bindings['project_id'];
                 Task::create($data);

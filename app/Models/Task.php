@@ -7,6 +7,7 @@ use App\Enums\Task\TaskStatus;
 use Filament\Forms\Components\RichEditor\MentionProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Tilto\Commentable\Contracts\Commentable;
 use Tilto\Commentable\Traits\HasComments;
 
@@ -77,5 +78,10 @@ class Task extends Model implements Commentable
     public function assignedTo(): BelongsTo
     {
         return $this->belongsTo(User::class, 'assigned_to_id', 'id');
+    }
+
+    public function subTasks(): HasMany
+    {
+        return $this->hasMany(static::class, 'parent_id', 'id');
     }
 }

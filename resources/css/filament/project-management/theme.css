@@ -8,6 +8,8 @@
 
 @source "../../../../vendor/relaticle/flowforge/resources/views/**/*.blade.php";
 
+@source '../../../../vendor/jaocero/radio-deck/resources/views';
+
 
 span[data-type="mention"],
 a[data-type="mention"] {

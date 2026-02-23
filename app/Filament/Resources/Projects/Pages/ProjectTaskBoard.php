@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Projects\Pages;
 
+use App\Enums\Task\TaskPriority;
 use App\Enums\Task\TaskStatus;
 use App\Filament\Actions\Tasks\CreateNewTaskAction;
 use App\Filament\Actions\Tasks\EditTaskAction;
@@ -16,6 +17,11 @@ use Filament\Resources\Pages\Concerns\InteractsWithRecord;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
+use Filament\Tables\Enums\FiltersLayout;
+use Filament\Tables\Filters\Filter;
+use Filament\Tables\Filters\SelectFilter;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Auth;
 use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardResourcePage;
 use Relaticle\Flowforge\Column;
@@ -61,8 +67,12 @@ class ProjectTaskBoard extends BoardResourcePage
         return $board
             ->query(
                 // Get tasks for this specific campaign and current user's team
-                Task::with('assignedTo')
+                Task::with([
+                    'assignedTo',
+                    'subTasks'
+                ])
                     ->where('project_id', $this->getRecord()?->id)
+                    ->whereNull('parent_id')
             )
             ->columnIdentifier('status')
             ->positionIdentifier('position')
@@ -101,6 +111,18 @@ class ProjectTaskBoard extends BoardResourcePage
                                     ->badge(),
                             ]),
                     ]);
-            });
+            })
+            ->filtersLayout(FiltersLayout::AboveContent)
+            ->filters([
+                SelectFilter::make('priority')
+                    ->options(TaskPriority::class)
+                    ->multiple(),
+                Filter::make('assigned_to_me')
+                    ->label('Assigned to me')
+                    ->query(function (Builder $query) {
+                        return $query->where('assigned_to_id', Auth::id());
+                    })
+                    ->toggle(),
+            ]);
     }
 }
