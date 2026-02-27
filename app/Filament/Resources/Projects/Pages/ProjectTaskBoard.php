@@ -112,7 +112,7 @@ class ProjectTaskBoard extends BoardResourcePage
                             ]),
                     ]);
             })
-            ->filtersLayout(FiltersLayout::AboveContent)
+            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
             ->filters([
                 SelectFilter::make('priority')
                     ->options(TaskPriority::class)

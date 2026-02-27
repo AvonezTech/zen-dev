@@ -15,6 +15,7 @@ use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Enums\FontWeight;
 use Filament\Support\Enums\TextSize;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\HtmlString;
 use Tilto\Commentable\Filament\Infolists\Components\CommentsEntry;
 
 class ViewTaskAction extends BaseAction
@@ -61,10 +62,13 @@ class ViewTaskAction extends BaseAction
                         ->badge(),
                 ]),
             TextEntry::make('description')
+                ->html()
+                ->state(function(Task $record){
+                    return new HtmlString($record->description);
+                })
                 ->extraAttributes([
                     'class' => 'border p-2 rounded'
-                ])
-                ->html(),
+                ]),
 
             Tabs::make()
                 ->contained(false)
