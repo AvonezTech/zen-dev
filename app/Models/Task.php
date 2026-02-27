@@ -38,7 +38,7 @@ class Task extends Model implements Commentable
             'start_date' => 'date',
             'due_date' => 'date',
             'completed_at' => 'datetime',
-            'description' => 'array',
+            // 'description' => 'array',
         ];
     }
 
