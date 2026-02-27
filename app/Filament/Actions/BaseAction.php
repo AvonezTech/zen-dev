@@ -23,10 +23,12 @@ abstract class BaseAction
 
     public static function make(array $bindings = []): Action
     {
+
         $bindings = Validator::validate(
             $bindings,
-            self::bindingRules()
+            static::bindingRules()
         );
+
 
         $filamentAction = Action::make(static::name($bindings))
             ->schema(static::schema($bindings))

@@ -38,7 +38,22 @@ class Task extends Model implements Commentable
             'start_date' => 'date',
             'due_date' => 'date',
             'completed_at' => 'datetime',
+            'description' => 'array',
         ];
+    }
+
+    // Booted
+
+    protected static function booted()
+    {
+        static::saving(function (Task $task) {
+            if (
+                $task->isDirty('status') &&
+                $task->status == TaskStatus::COMPLETED
+            ) {
+                $task->completed_at = now();
+            }
+        });
     }
 
     // Comment mentions

@@ -7,10 +7,9 @@ use App\Filament\Infolists\Components\SubTaskEntry;
 use App\Models\Task;
 use Closure;
 use Filament\Actions\Action;
-use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Forms\Components\RichEditor\RichContentRenderer;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Enums\FontWeight;
@@ -62,7 +61,6 @@ class ViewTaskAction extends BaseAction
                         ->badge(),
                 ]),
             TextEntry::make('description')
-                ->hiddenLabel()
                 ->extraAttributes([
                     'class' => 'border p-2 rounded'
                 ])

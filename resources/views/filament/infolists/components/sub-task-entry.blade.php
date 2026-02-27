@@ -2,7 +2,7 @@
     <div {{ $getExtraAttributeBag() }}>
         @livewire('sub-task-entry.infolist-component', [
             'parentTask' => $record,
-            'subTasks' => $getState()->toArray(),
+            'subTasks' => $record->subTasks->toArray(),
         ])
 
 </div>
