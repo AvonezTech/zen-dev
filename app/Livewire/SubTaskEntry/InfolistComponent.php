@@ -28,6 +28,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Colors\Color;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 use Illuminate\Support\Str;
 use Livewire\Component;
@@ -76,7 +77,8 @@ class InfolistComponent extends Component implements HasSchemas, HasActions
                                     ->options(TaskPriority::class),
                                 TextInput::make('estimated_days')
                                     ->numeric(),
-                                DatePicker::make('start_date'),
+                                DatePicker::make('start_date')
+                                    ->default(now()),
                                 DatePicker::make('due_date'),
                             ]),
                         MarkdownEditor::make('description'),
@@ -84,36 +86,52 @@ class InfolistComponent extends Component implements HasSchemas, HasActions
                     ->footerActions([
                         Action::make('Create')
                             ->action(function (Get $get, Set $set) {
-
                                 $getData = $get();
 
-                                $subTaskData = [
-                                    'project_id' => $getData['project_id'],
-                                    'parent_id' => $getData['parent_id'],
-                                    'assigned_to_id' => $getData['assigned_to_id'],
-                                    'title' => $getData['title'],
-                                    'description' => $getData['description'],
-                                    'status' => $getData['status'],
-                                    'priority' => $getData['priority'],
-                                    'estimated_days' => $getData['estimated_days'],
-                                    'start_date' => $getData['start_date'],
-                                    'due_date' => $getData['due_date'],
-                                ];
+                                try {
 
-                                $newSubTask = Task::create($subTaskData);
+                                    $subTaskData = [
+                                        'project_id' => $getData['project_id'],
+                                        'parent_id' => $getData['parent_id'],
+                                        'assigned_to_id' => $getData['assigned_to_id'],
+                                        'title' => $getData['title'],
+                                        'description' => $getData['description'],
+                                        'status' => $getData['status'],
+                                        'priority' => $getData['priority'],
+                                        'estimated_days' => $getData['estimated_days'],
+                                        'start_date' => $getData['start_date'],
+                                        'due_date' => $getData['due_date'],
+                                    ];
 
-                                $subTasks = [
-                                    Str::uuid()->toString() => $newSubTask->toArray(),
-                                    ...$getData['subTasks']
-                                ];
+                                    $newSubTask = Task::create($subTaskData);
 
-                                $set('subTasks', $subTasks);
+                                    $subTasks = [
+                                        Str::uuid()->toString() => $newSubTask->toArray(),
+                                        ...$getData['subTasks']
+                                    ];
 
-                                Notification::make()
-                                    ->title("Success")
-                                    ->body("Sub task added successfully")
-                                    ->success()
-                                    ->send();
+                                    $set('subTasks', $subTasks);
+
+                                    Notification::make()
+                                        ->title("Success")
+                                        ->body("Sub task added successfully")
+                                        ->success()
+                                        ->send();
+                                } catch (\Throwable $th) {
+                                    Log::error("Failed to create sub task", [
+                                        'data' => $getData,
+                                        'error' => [
+                                            'code' => $th->getCode(),
+                                            'message' => $th->getMessage(),
+                                            'trace' => $th->getTrace()
+                                        ],
+                                    ]);
+                                    Notification::make()
+                                        ->title("Error")
+                                        ->body("Failed to add sub task")
+                                        ->danger()
+                                        ->send();
+                                }
                             })
                     ]),
 
