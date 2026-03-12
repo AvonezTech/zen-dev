@@ -5,6 +5,7 @@ namespace App\Filament\Actions\Tasks;
 use App\Enums\Task\TaskPriority;
 use App\Enums\Task\TaskStatus;
 use App\Filament\Actions\BaseAction;
+use App\Models\PersonalBoard;
 use App\Models\Task;
 use App\Models\User;
 use Closure;
@@ -17,6 +18,7 @@ use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class CreateNewSubTaskAction extends BaseAction
@@ -40,9 +42,13 @@ class CreateNewSubTaskAction extends BaseAction
     protected static function bindingRules(): array
     {
         return [
-            'project_id' => [
+            'taskable_id' => [
                 'required',
-                'exists:projects,id'
+                'nullable'
+            ],
+            'taskable_type' => [
+                'required',
+                'nullable'
             ],
             'parent_id' => [
                 'required',
@@ -72,6 +78,16 @@ class CreateNewSubTaskAction extends BaseAction
                         ->options(
                             User::pluck('name', 'id')
                         )
+                        ->hidden(function () use ($bindings) {
+                            return $bindings['taskable_type'] == PersonalBoard::class;
+                        })
+                        ->default(function () use ($bindings) {
+                            if ($bindings['taskable_type'] == PersonalBoard::class) {
+                                return Auth::id();
+                            } else {
+                                return null;
+                            }
+                        })
                         ->preload()
                         ->searchable()
                         ->required(),
@@ -95,7 +111,8 @@ class CreateNewSubTaskAction extends BaseAction
         return function (array $data) use ($bindings) {
             dd($data);
             try {
-                $data['project_id'] = $bindings['project_id'];
+                $data['taskable_id'] = $bindings['taskable_id'];
+                $data['taskable_type'] = $bindings['taskable_type'];
                 Task::create($data);
                 Notification::make()
                     ->title('Success')

@@ -8,6 +8,7 @@ use Filament\Forms\Components\RichEditor\MentionProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Tilto\Commentable\Contracts\Commentable;
 use Tilto\Commentable\Traits\HasComments;
 
@@ -16,7 +17,9 @@ class Task extends Model implements Commentable
     use HasComments;
 
     protected $fillable = [
-        'project_id',
+        // 'project_id',
+        'taskable_id',
+        'taskable_type',
         'parent_id',
         'title',
         'status',
@@ -80,9 +83,9 @@ class Task extends Model implements Commentable
 
     // Relationship
 
-    public function project(): BelongsTo
+    public function taskable(): MorphTo
     {
-        return $this->belongsTo(Project::class);
+        return $this->morphTo();
     }
 
     public function parent(): BelongsTo

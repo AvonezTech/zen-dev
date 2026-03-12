@@ -49,7 +49,8 @@ class InfolistComponent extends Component implements HasSchemas, HasActions
         $this->subTasks = $subTasks;
         $this->parentTask = $parentTask;
         $this->form->fill([
-            'project_id' => $parentTask->project_id,
+            'taskable_id' => $parentTask->taskable_id,
+            'taskable_type' => $parentTask->taskable_type,
             'parent_id' => $parentTask->id,
             'assigned_to_id' => $parentTask->assigned_to_id,
             'subTasks' => $subTasks
@@ -60,7 +61,8 @@ class InfolistComponent extends Component implements HasSchemas, HasActions
     {
         return $schema
             ->components([
-                Hidden::make('project_id'),
+                Hidden::make('taskable_id'),
+                Hidden::make('taskable_type'),
                 Hidden::make('parent_id'),
                 Hidden::make('assigned_to_id'),
                 Section::make("New sub task")
@@ -91,7 +93,8 @@ class InfolistComponent extends Component implements HasSchemas, HasActions
                                 try {
 
                                     $subTaskData = [
-                                        'project_id' => $getData['project_id'],
+                                        'taskable_id' => $getData['taskable_id'],
+                                        'taskable_type' => $getData['taskable_type'],
                                         'parent_id' => $getData['parent_id'],
                                         'assigned_to_id' => $getData['assigned_to_id'],
                                         'title' => $getData['title'],

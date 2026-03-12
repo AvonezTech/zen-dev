@@ -5,6 +5,7 @@ namespace App\Filament\Actions\Tasks;
 use App\Enums\Task\TaskPriority;
 use App\Enums\Task\TaskStatus;
 use App\Filament\Actions\BaseAction;
+use App\Models\PersonalBoard;
 use App\Models\Task;
 use App\Models\User;
 use Closure;
@@ -16,6 +17,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class EditTaskAction extends BaseAction
@@ -70,7 +72,17 @@ class EditTaskAction extends BaseAction
                         )
                         ->preload()
                         ->searchable()
-                        ->required(),
+                        ->required()
+                        ->hidden(function() use ($bindings) {
+                            return $bindings['taskable_type'] == PersonalBoard::class;
+                        })
+                        ->default(function() use ($bindings) {
+                            if($bindings['taskable_type'] == PersonalBoard::class){
+                                return Auth::id();
+                            } else {
+                                return null;
+                            }
+                        }),
                     TextInput::make('estimated_days')
                         ->numeric()
                         ->required(),
