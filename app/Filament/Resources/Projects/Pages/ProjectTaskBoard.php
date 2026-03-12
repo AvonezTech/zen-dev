@@ -2,7 +2,6 @@
 
 namespace App\Filament\Resources\Projects\Pages;
 
-use App\Enums\Task\TaskPriority;
 use App\Enums\Task\TaskStatus;
 use App\Filament\Actions\Tasks\CreateNewTaskAction;
 use App\Filament\Actions\Tasks\EditTaskAction;
@@ -19,7 +18,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Enums\FiltersLayout;
 use Filament\Tables\Filters\Filter;
-use Filament\Tables\Filters\SelectFilter;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Facades\Auth;
 use Relaticle\Flowforge\Board;
@@ -112,11 +110,9 @@ class ProjectTaskBoard extends BoardResourcePage
                             ]),
                     ]);
             })
-            ->filtersLayout(FiltersLayout::AboveContentCollapsible)
+            ->filtersLayout(FiltersLayout::BelowContent)
+            ->filtersFormColumns(1)
             ->filters([
-                SelectFilter::make('priority')
-                    ->options(TaskPriority::class)
-                    ->multiple(),
                 Filter::make('assigned_to_me')
                     ->label('Assigned to me')
                     ->query(function (Builder $query) {
