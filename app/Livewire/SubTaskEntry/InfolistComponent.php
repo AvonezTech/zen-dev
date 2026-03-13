@@ -53,6 +53,9 @@ class InfolistComponent extends Component implements HasSchemas, HasActions
             'taskable_type' => $parentTask->taskable_type,
             'parent_id' => $parentTask->id,
             'assigned_to_id' => $parentTask->assigned_to_id,
+            'status' => TaskStatus::TODO,
+            'priority' => TaskPriority::MEDIUM,
+            'start_date' => now(),
             'subTasks' => $subTasks
         ]);
     }
@@ -74,8 +77,10 @@ class InfolistComponent extends Component implements HasSchemas, HasActions
                         ])
                             ->schema([
                                 Select::make('status')
+                                    ->default(TaskStatus::TODO)
                                     ->options(TaskStatus::class),
                                 Select::make('priority')
+                                    ->default(TaskPriority::MEDIUM)
                                     ->options(TaskPriority::class),
                                 TextInput::make('estimated_days')
                                     ->numeric(),
