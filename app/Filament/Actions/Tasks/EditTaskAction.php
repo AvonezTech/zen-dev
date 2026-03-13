@@ -27,13 +27,19 @@ class EditTaskAction extends BaseAction
         return 'editTask';
     }
 
-    // protected static function bindingRules(): array{
-    //     return [
-    //         'task_id' => [
-    //             'required', 'exists:tasks,id'
-    //         ],
-    //     ];
-    // }
+    protected static function bindingRules(): array
+    {
+        return [
+            // 'taskable_id' => [
+            //     'required',
+            //     'nullable'
+            // ],
+            // 'taskable_type' => [
+            //     'required',
+            //     'nullable'
+            // ],
+        ];
+    }
 
     protected static function mutateFilamentAction(Action $filamentAction): Action
     {
@@ -73,15 +79,8 @@ class EditTaskAction extends BaseAction
                         ->preload()
                         ->searchable()
                         ->required()
-                        ->hidden(function() use ($bindings) {
-                            return $bindings['taskable_type'] == PersonalBoard::class;
-                        })
-                        ->default(function() use ($bindings) {
-                            if($bindings['taskable_type'] == PersonalBoard::class){
-                                return Auth::id();
-                            } else {
-                                return null;
-                            }
+                        ->hidden(function (Task $record) {
+                            return $record->taskable_type == PersonalBoard::class;
                         }),
                     TextInput::make('estimated_days')
                         ->numeric()
