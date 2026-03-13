@@ -65,7 +65,7 @@ class ViewTaskAction extends BaseAction
                 ]),
             TextEntry::make('description')
                 ->html()
-                ->state(function(Task $record){
+                ->state(function (Task $record) {
                     return new HtmlString($record->description);
                 })
                 ->extraAttributes([
@@ -94,6 +94,8 @@ class ViewTaskAction extends BaseAction
 
     protected static function action(array $bindings): Closure
     {
-        return function (array $data) use ($bindings) {};
+        return function (array $data) use ($bindings) {
+            // No action required
+        };
     }
 }
