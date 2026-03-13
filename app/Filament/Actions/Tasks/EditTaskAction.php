@@ -17,7 +17,6 @@ use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
 use Filament\Support\Icons\Heroicon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class EditTaskAction extends BaseAction
@@ -99,7 +98,7 @@ class EditTaskAction extends BaseAction
 
     protected static function action(array $bindings): Closure
     {
-        return function (array $data, Task $record) use ($bindings) {
+        return function (array $data, Task $record) {
             try {
                 $record->update($data);
                 Notification::make()

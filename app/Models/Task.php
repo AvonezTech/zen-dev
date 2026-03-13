@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\Task\TaskableType;
 use App\Enums\Task\TaskPriority;
 use App\Enums\Task\TaskStatus;
 use Filament\Forms\Components\RichEditor\MentionProvider;
@@ -36,6 +37,7 @@ class Task extends Model implements Commentable
     protected function casts(): array
     {
         return [
+            'taskable_type' => TaskableType::class,
             'status' => TaskStatus::class,
             'priority' => TaskPriority::class,
             'start_date' => 'date',

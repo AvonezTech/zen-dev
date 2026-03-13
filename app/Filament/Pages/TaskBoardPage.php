@@ -88,6 +88,7 @@ class TaskBoardPage extends BoardResourcePage
 
                 // Get tasks for this specific campaign and current user's team
                 return Task::with([
+                    'taskable',
                     'assignedTo',
                     'subTasks'
                 ])
@@ -119,7 +120,23 @@ class TaskBoardPage extends BoardResourcePage
                             ->badge()
                             ->prefix('@')
                             ->columnSpanFull()
-                            ->hiddenLabel(),
+                            ->hiddenLabel()
+                            ->hidden(function () {
+                                if (!$this->hasRecord()) {
+                                    return true;
+                                }
+                                return !is_a($this->getRecord(), Project::class);
+                            }),
+                        TextEntry::make('board_source')
+                            ->badge()
+                            ->columnSpanFull()
+                            ->hiddenLabel()
+                            ->state(function (Task $record) {
+                                return $record->taskable_type->getLabel() .': ' . $record->taskable->name;
+                            })
+                            ->hidden(function () {
+                                return $this->hasRecord();
+                            }),
                         Grid::make(2)
                             ->gap(false)
                             ->schema([

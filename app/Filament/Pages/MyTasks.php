@@ -25,6 +25,7 @@ class MyTasks extends BoardPage
             ->board($board)
             ->query(
                 Task::with([
+                    'taskable',
                     'assignedTo',
                     'subTasks'
                 ])
