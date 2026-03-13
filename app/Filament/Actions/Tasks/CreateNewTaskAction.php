@@ -11,11 +11,13 @@ use App\Models\User;
 use Closure;
 use Filament\Actions\Action;
 use Filament\Forms\Components\DatePicker;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Support\Enums\Width;
 use Filament\Support\Icons\Heroicon;
 use Illuminate\Support\Facades\Auth;
@@ -65,28 +67,32 @@ class CreateNewTaskAction extends BaseAction
                         ->required(),
                     Select::make('status')
                         ->options(TaskStatus::class)
+                        ->default(TaskStatus::TODO)
                         ->required(),
                     Select::make('priority')
                         ->options(TaskPriority::class)
+                        ->default(TaskPriority::MEDIUM)
                         ->required(),
-                    Select::make('assigned_to_id')
-                        ->label('AssignedTo')
+                    Hidden::make('assigned_to_id')
+                        ->default(Auth::id()),
+                    Select::make('assigned_to_id_temp')
+                        ->dehydrated(false)
+                        ->label('Assigned To')
+                        ->live()
                         ->options(
                             User::pluck('name', 'id')
                         )
                         ->hidden(function() use ($bindings) {
                             return $bindings['taskable_type'] == PersonalBoard::class;
                         })
-                        ->default(function() use ($bindings) {
-                            if($bindings['taskable_type'] == PersonalBoard::class){
-                                return Auth::id();
-                            } else {
-                                return null;
-                            }
-                        })
                         ->preload()
                         ->searchable()
-                        ->required(),
+                        ->required(function() use ($bindings) {
+                            return $bindings['taskable_type'] != PersonalBoard::class;
+                        })
+                        ->afterStateUpdated(function(?string $state, Set $set){
+                            $set('assigned_to_id', $state ?? Auth::id());
+                        }),
                     TextInput::make('estimated_days')
                         ->numeric()
                         ->required(),

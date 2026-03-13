@@ -6,15 +6,14 @@ use App\Enums\Task\TaskStatus;
 use App\Filament\Actions\Tasks\CreateNewTaskAction;
 use App\Filament\Actions\Tasks\EditTaskAction;
 use App\Filament\Actions\Tasks\ViewTaskAction;
-use App\Filament\Resources\Projects\ProjectResource;
-use App\Models\PersonalBoard;
+use App\Models\Project;
 use App\Models\Task;
-use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Pages\Concerns\InteractsWithHeaderActions;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
+use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -27,7 +26,7 @@ use Relaticle\Flowforge\Board;
 use Relaticle\Flowforge\BoardResourcePage;
 use Relaticle\Flowforge\Column;
 
-abstract class TaskBoardPage extends BoardResourcePage
+class TaskBoardPage extends BoardResourcePage
 {
     use InteractsWithRecord;
 
@@ -39,48 +38,63 @@ abstract class TaskBoardPage extends BoardResourcePage
     }
 
 
-    public function mount(int | string $record): void
+    public function mount(int | string | null $record): void
     {
-        $this->record = $this->resolveRecord($record);
+        if (!$record) {
+            $this->record = null;
+        } else {
+            $this->record = $this->resolveRecord($record);
+        }
     }
 
     protected function getHeaderActions(): array
     {
-        return [
-            CreateNewTaskAction::make([
-                'taskable_id' => $this->getRecord()?->id,
-                'taskable_type' => get_class($this->getRecord()),
-            ]),
-            ActionGroup::make([
-                Action::make('view')
-                    ->outlined()
-                    ->icon(Heroicon::OutlinedViewfinderCircle)
-                    ->url(static::$resource::getUrl('view', [
-                        'record' => $this->getRecord()
-                    ])),
-                Action::make('edit')
-                    ->outlined()
-                    ->icon(Heroicon::OutlinedPencilSquare)
-                    ->url(static::$resource::getUrl('edit', [
-                        'record' => $this->getRecord()
-                    ])),
-            ]),
-        ];
+        if (
+            $this->hasRecord() &&
+            isset(static::$resource)
+        ) {
+            return [
+                CreateNewTaskAction::make([
+                    'taskable_id' => $this->getRecord()?->id,
+                    'taskable_type' => get_class($this->getRecord()),
+                ]),
+                ActionGroup::make([
+                    Action::make('view')
+                        ->outlined()
+                        ->icon(Heroicon::OutlinedViewfinderCircle)
+                        ->url(static::$resource::getUrl('view', [
+                            'record' => $this->getRecord()
+                        ])),
+                    Action::make('edit')
+                        ->outlined()
+                        ->icon(Heroicon::OutlinedPencilSquare)
+                        ->url(static::$resource::getUrl('edit', [
+                            'record' => $this->getRecord()
+                        ])),
+                ]),
+            ];
+        } else {
+            return [];
+        }
     }
 
     public function board(Board $board): Board
     {
         return $board
-            ->query(
+            ->query(function () {
+                if (!$this->hasRecord()) {
+                    return Task::where('id', 0);
+                }
+
                 // Get tasks for this specific campaign and current user's team
-                Task::with([
+                return Task::with([
                     'assignedTo',
                     'subTasks'
                 ])
                     ->where('taskable_id', $this->getRecord()?->id)
                     ->where('taskable_type', get_class($this->getRecord()))
-                    ->whereNull('parent_id')
-            )
+                    ->whereNull('parent_id');
+            })
             ->columnIdentifier('status')
             ->positionIdentifier('position')
             ->columns(
@@ -127,8 +141,11 @@ abstract class TaskBoardPage extends BoardResourcePage
                     ->query(function (Builder $query) {
                         return $query->where('assigned_to_id', Auth::id());
                     })
-                    ->hidden(function(){
-                        return is_a($this->getRecord(), PersonalBoard::class);
+                    ->hidden(function () {
+                        if (!$this->hasRecord()) {
+                            return true;
+                        }
+                        return is_a($this->getRecord(), Project::class);
                     })
                     ->toggle(),
             ]);
