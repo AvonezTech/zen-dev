@@ -25,6 +25,7 @@ class ViewProject extends ViewRecord
                         'record' => $this->getRecord()
                     ])
                 ),
+                EditAction::make(),
         ];
     }
 }
