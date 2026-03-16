@@ -69,4 +69,14 @@ class Project extends Model
     {
         return $this->morphMany(Task::class, 'taskable');
     }
+
+    public function incomes(): HasMany
+    {
+        return $this->hasMany(Income::class);
+    }
+
+    public function expenditures(): HasMany
+    {
+        return $this->hasMany(Expenditure::class);
+    }
 }
