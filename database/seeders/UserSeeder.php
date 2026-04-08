@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             'email' => 'test@example.com',
             'mobile_number' => '9876543210',
             'github_username' => 'testuser',
+            'password' => bcrypt('password'),
         ]);
     }
 }
