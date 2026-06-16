@@ -13,7 +13,6 @@ use Filament\Actions\ActionGroup;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Pages\Concerns\InteractsWithHeaderActions;
 use Filament\Resources\Pages\Concerns\InteractsWithRecord;
-use Filament\Resources\Resource;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -28,19 +27,17 @@ use Relaticle\Flowforge\Column;
 
 class TaskBoardPage extends BoardResourcePage
 {
+    use InteractsWithHeaderActions;
     use InteractsWithRecord;
 
-    use InteractsWithHeaderActions;
-
-    public function getTitle(): string | Htmlable
+    public function getTitle(): string|Htmlable
     {
         return 'Tasks';
     }
 
-
-    public function mount(int | string | null $record): void
+    public function mount(int|string|null $record): void
     {
-        if (!$record) {
+        if (! $record) {
             $this->record = null;
         } else {
             $this->record = $this->resolveRecord($record);
@@ -63,13 +60,13 @@ class TaskBoardPage extends BoardResourcePage
                         ->outlined()
                         ->icon(Heroicon::OutlinedViewfinderCircle)
                         ->url(static::$resource::getUrl('view', [
-                            'record' => $this->getRecord()
+                            'record' => $this->getRecord(),
                         ])),
                     Action::make('edit')
                         ->outlined()
                         ->icon(Heroicon::OutlinedPencilSquare)
                         ->url(static::$resource::getUrl('edit', [
-                            'record' => $this->getRecord()
+                            'record' => $this->getRecord(),
                         ])),
                 ]),
             ];
@@ -82,7 +79,7 @@ class TaskBoardPage extends BoardResourcePage
     {
         return $board
             ->query(function () {
-                if (!$this->hasRecord()) {
+                if (! $this->hasRecord()) {
                     return Task::where('id', 0);
                 }
 
@@ -90,11 +87,11 @@ class TaskBoardPage extends BoardResourcePage
                 return Task::with([
                     'taskable',
                     'assignedTo',
-                    'subTasks'
+                    'subTasks',
                 ])
+                    ->whereNull('parent_id')
                     ->where('taskable_id', $this->getRecord()?->id)
-                    ->where('taskable_type', get_class($this->getRecord()))
-                    ->whereNull('parent_id');
+                    ->where('taskable_type', get_class($this->getRecord()));
             })
             ->columnIdentifier('status')
             ->positionIdentifier('position')
@@ -122,17 +119,21 @@ class TaskBoardPage extends BoardResourcePage
                             ->columnSpanFull()
                             ->hiddenLabel()
                             ->hidden(function () {
-                                if (!$this->hasRecord()) {
+                                if (! $this->hasRecord()) {
                                     return true;
                                 }
-                                return !is_a($this->getRecord(), Project::class);
+
+                                return ! is_a($this->getRecord(), Project::class);
                             }),
                         TextEntry::make('board_source')
                             ->badge()
                             ->columnSpanFull()
                             ->hiddenLabel()
                             ->state(function (Task $record) {
-                                return $record->taskable_type->getLabel() .': ' . $record->taskable->name;
+                                $typeLabel = $record->taskable_type?->getLabel() ?? 'Unknown';
+                                $taskableName = $record->taskable?->name ?? 'Missing / Deleted Source';
+
+                                return $typeLabel.': '.$taskableName;
                             })
                             ->hidden(function () {
                                 return $this->hasRecord();
@@ -159,9 +160,10 @@ class TaskBoardPage extends BoardResourcePage
                         return $query->where('assigned_to_id', Auth::id());
                     })
                     ->hidden(function () {
-                        if (!$this->hasRecord()) {
+                        if (! $this->hasRecord()) {
                             return true;
                         }
+
                         return is_a($this->getRecord(), Project::class);
                     })
                     ->toggle(),
