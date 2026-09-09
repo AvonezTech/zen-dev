@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\Task\TaskableType;
 use App\Enums\Task\TaskPriority;
 use App\Enums\Task\TaskStatus;
+use App\Notifications\TaskAssignedNotification;
 use Filament\Forms\Components\RichEditor\MentionProvider;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -57,6 +58,23 @@ class Task extends Model implements Commentable
                 $task->status == TaskStatus::COMPLETED
             ) {
                 $task->completed_at = now();
+            }
+        });
+
+        // Send notification when a task is created with an assignee
+        static::created(function (Task $task) {
+            if ($task->assigned_to_id && $task->assignedTo) {
+                $task->assignedTo->notify(new TaskAssignedNotification($task));
+            }
+        });
+
+        // Send notification when a task's assignee changes
+        static::updated(function (Task $task) {
+            if (($task->wasChanged('assigned_to_id') || $task->isDirty('assigned_to_id')) && $task->assigned_to_id) {
+                $task->unsetRelation('assignedTo');
+                if ($task->assignedTo) {
+                    $task->assignedTo->notify(new TaskAssignedNotification($task));
+                }
             }
         });
     }
