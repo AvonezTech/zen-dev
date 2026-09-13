@@ -11,6 +11,7 @@ use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\Summarizers\Sum;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\TrashedFilter;
+use Filament\Tables\Grouping\Group;
 use Filament\Tables\Table;
 
 class DailyExpensesTable
@@ -18,11 +19,25 @@ class DailyExpensesTable
     public static function configure(Table $table): Table
     {
         return $table
+            ->groups([
+                Group::make('vendorRecord.name')
+                    ->label('Vendor')
+                    ->collapsible(),
+            ])
+            ->defaultGroup('vendorRecord.name')
+            ->defaultSort('date', 'desc')
             ->columns([
                 TextColumn::make('date')
                     ->date('Y-m-d')
                     ->sortable(),
                 
+                TextColumn::make('user.name')
+                    ->label('Recorded By')
+                    ->placeholder('N/A')
+                    ->searchable()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+
                 TextColumn::make('category')
                     ->badge()
                     ->searchable()
@@ -32,9 +47,11 @@ class DailyExpensesTable
                     ->searchable()
                     ->limit(40),
                 
-                TextColumn::make('vendor')
+                TextColumn::make('vendorRecord.name')
+                    ->label('Vendor')
                     ->searchable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                    ->sortable()
+                    ->placeholder('General / No Vendor'),
                 
                 TextColumn::make('project.name')
                     ->label('Project')
@@ -55,22 +72,18 @@ class DailyExpensesTable
                     ->numeric(decimalPlaces: 2)
                     ->prefix('NPR ')
                     ->sortable()
-                    ->summarize(
-                        Sum::make('amount')
-                            ->label('Total Bill')
-                            ->money('NPR')
-                    ),
+                    ->summarize([
+                        Sum::make('amount')->label('Subtotal')->money('NPR'),
+                    ]),
                 
                 TextColumn::make('paid_amount')
                     ->label('Paid')
                     ->numeric(decimalPlaces: 2)
                     ->prefix('NPR ')
                     ->sortable()
-                    ->summarize(
-                        Sum::make('paid_amount')
-                            ->label('Total Paid')
-                            ->money('NPR')
-                    ),
+                    ->summarize([
+                        Sum::make('paid_amount')->label('Subtotal Paid')->money('NPR'),
+                    ]),
 
                 TextColumn::make('payment_status')
                     ->label('Pay Status')
@@ -86,11 +99,9 @@ class DailyExpensesTable
                     ->numeric(decimalPlaces: 2)
                     ->prefix('NPR ')
                     ->color(fn (float $state) => $state > 0 ? 'danger' : 'success')
-                    ->summarize(
-                        Sum::make('due_amount')
-                            ->label('Total Due')
-                            ->money('NPR')
-                    ),
+                    ->summarize([
+                        Sum::make('due_amount')->label('Vendor Due Total')->money('NPR'),
+                    ]),
                 
                 TextColumn::make('status')
                     ->badge(),
@@ -98,10 +109,10 @@ class DailyExpensesTable
             ->filters([
                 TrashedFilter::make(),
             ])
-            ->recordActions([
+            ->actions([
                 EditAction::make(),
             ])
-            ->toolbarActions([
+            ->bulkActions([
                 BulkActionGroup::make([
                     DeleteBulkAction::make(),
                     ForceDeleteBulkAction::make(),

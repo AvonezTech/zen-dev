@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Enums\ExpenseCategory;
 use App\Enums\PaymentMethod;
 use App\Enums\TransactionStatus;
+use App\Models\Vendor;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -27,6 +28,7 @@ class DailyExpense extends Model
         'payment_status',
         'user_id',
         'project_id',
+        'vendor_id',
         'vendor',
         'status',
     ];
@@ -46,6 +48,12 @@ class DailyExpense extends Model
 
     protected static function booted()
     {
+        static::creating(function (DailyExpense $expense) {
+            if (empty($expense->user_id) && auth()->check()) {
+                $expense->user_id = auth()->id();
+            }
+        });
+
         static::saving(function (DailyExpense $expense) {
             $total = (float) $expense->amount;
             $paid = (float) $expense->paid_amount;
@@ -70,6 +78,11 @@ class DailyExpense extends Model
     public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id');
+    }
+
+    public function vendorRecord(): BelongsTo
+    {
+        return $this->belongsTo(Vendor::class, 'vendor_id');
     }
 
     public function scopeCompleted($query)

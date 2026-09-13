@@ -61,7 +61,19 @@ class DailyExpenseForm
                     ->preload()
                     ->nullable(),
                 
+                Select::make('vendor_id')
+                    ->relationship('vendorRecord', 'name')
+                    ->searchable()
+                    ->preload()
+                    ->createOptionForm([
+                        TextInput::make('name')->required()->maxLength(255),
+                        TextInput::make('phone')->tel()->maxLength(255),
+                    ])
+                    ->label('Vendor')
+                    ->nullable(),
+                
                 TextInput::make('vendor')
+                    ->label('Legacy Vendor Text (Optional)')
                     ->maxLength(255)
                     ->nullable(),
                 
