@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Minutes\Tables;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
+use Filament\Actions\ViewAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreBulkAction;
 use Filament\Tables\Columns\TextColumn;
@@ -40,6 +41,7 @@ class MinutesTable
             ])
             ->recordActions([
                 EditAction::make(),
+                ViewAction::make(), 
             ])
             ->toolbarActions([
                 BulkActionGroup::make([
