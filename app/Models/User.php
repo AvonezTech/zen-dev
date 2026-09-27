@@ -33,6 +33,7 @@ class User extends Authenticatable implements FilamentUser, Commenter
         'password',
         'mobile_number',
         'github_username',
+        'is_admin',
     ];
 
     /**

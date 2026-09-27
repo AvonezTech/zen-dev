@@ -4,6 +4,7 @@ namespace App\Filament\Resources\Users\Schemas;
 
 use Filament\Forms\Components\DateTimePicker;
 use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Schema;
 
 class UserForm
@@ -20,11 +21,16 @@ class UserForm
                     ->required(),
                 TextInput::make('password')
                     ->password()
-                    ->required(),
+                    ->required()
+                    ->dehydrated(fn ($state) => filled($state))
+                    ->required(fn (string $context): bool => $context === 'create'),
                 TextInput::make('mobile_number')
                     ->required(),
                 TextInput::make('github_username')
                     ->required(),
+                Toggle::make('is_admin')
+                    ->label('Is Administrator')
+                    ->inline(false),
             ]);
     }
 }
