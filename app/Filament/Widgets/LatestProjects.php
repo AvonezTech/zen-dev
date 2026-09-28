@@ -15,6 +15,14 @@ class LatestProjects extends BaseWidget
     
     protected int | string | array $columnSpan = 'full';
 
+    // --- ADMIN AUTHORIZATION ---
+    // Only allow admins to see this widget on the dashboard
+    public static function canView(): bool
+    {
+        return auth()->check() && auth()->user()->is_admin == 1;
+    }
+    // ---------------------------
+
     public function table(Table $table): Table
     {
         return $table
@@ -31,7 +39,7 @@ class LatestProjects extends BaseWidget
                         ->weight(FontWeight::Bold) 
                         ->icon('heroicon-m-code-bracket') 
                         ->iconColor('primary')
-                        ->size('lg'), // Removed ->searchable() from here
+                        ->size('lg'), 
                         
                     TextColumn::make('created_at')
                         ->dateTime()
@@ -41,7 +49,7 @@ class LatestProjects extends BaseWidget
                         ->icon('heroicon-m-clock'), 
                 ])->space(3), 
             ])
-            ->searchable(false) // Removes the search bar from the widget header entirely
+            ->searchable(false) 
             ->recordUrl(
                 fn (Project $record): string => route('filament.project-management.resources.projects.edit', ['record' => $record]),
             )

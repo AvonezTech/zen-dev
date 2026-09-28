@@ -3,13 +3,21 @@
 namespace App\Filament\Widgets;
 
 use App\Models\User;
-use App\Models\Project; // Assuming you have a Project model based on your sidebar
-use App\Models\Client;  // Assuming you have a Client model based on your sidebar
+use App\Models\Project; 
+use App\Models\Client;  
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 
 class DashboardStats extends BaseWidget
 {
+    // --- ADMIN AUTHORIZATION ---
+    // Only allow admins to see this widget on the dashboard
+    public static function canView(): bool
+    {
+        return auth()->check() && auth()->user()->is_admin == 1;
+    }
+    // ---------------------------
+
     protected function getStats(): array
     {
         return [

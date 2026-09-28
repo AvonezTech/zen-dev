@@ -3,7 +3,7 @@
 namespace App\Filament\Resources\Projects\Pages;
 
 use App\Filament\Resources\Projects\ProjectResource;
-use Filament\Actions\CreateAction;
+use Filament\Actions;
 use Filament\Resources\Pages\ListRecords;
 
 class ListProjects extends ListRecords
@@ -13,7 +13,9 @@ class ListProjects extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make(),
+            Actions\CreateAction::make()
+                // This ensures the button only renders for admins
+                ->visible(fn () => auth()->check() && auth()->user()->is_admin == 1),
         ];
     }
 }

@@ -18,6 +18,7 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
 use UnitEnum;
 
 class ProjectResource extends Resource
@@ -30,6 +31,34 @@ class ProjectResource extends Resource
 
     protected static string | UnitEnum | null $navigationGroup = 'Business';
 
+    // --- DATA FILTERING LOGIC ---
+    public static function getEloquentQuery(): Builder
+    {
+        $query = parent::getEloquentQuery();
+
+        // If the user is an admin, show all projects
+        if (auth()->check() && auth()->user()->is_admin == 1) {
+            return $query;
+        }
+
+        // If your database links projects to a single user via user_id column:
+        return $query->where('user_id', auth()->id());
+
+        // IF YOUR DATABASE USES A MANY-TO-MANY PIVOT TABLE FOR PROJECT MEMBERS, 
+        // DELETE THE LINE ABOVE AND UNCOMMENT THESE LINES INSTEAD:
+        /*
+        return $query->whereHas('users', function (Builder $query) {
+            $query->where('users.id', auth()->id());
+        });
+        */
+    }
+
+    // Only admins can create new projects
+    public static function canCreate(): bool
+    {
+        return auth()->check() && auth()->user()->is_admin == 1;
+    }
+    // ----------------------------
 
     public static function form(Schema $schema): Schema
     {
