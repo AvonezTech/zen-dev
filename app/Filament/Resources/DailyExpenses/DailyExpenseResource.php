@@ -27,6 +27,28 @@ class DailyExpenseResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'title';
 
+    // --- ADMIN AUTHORIZATION ---
+    public static function canViewAny(): bool
+    {
+        return auth()->check() && auth()->user()->is_admin == 1; 
+    }
+
+    public static function canCreate(): bool
+    {
+        return auth()->check() && auth()->user()->is_admin == 1;
+    }
+
+    public static function canEdit(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->check() && auth()->user()->is_admin == 1;
+    }
+
+    public static function canDelete(\Illuminate\Database\Eloquent\Model $record): bool
+    {
+        return auth()->check() && auth()->user()->is_admin == 1;
+    }
+    // ---------------------------
+
     public static function form(Schema $schema): Schema
     {
         return DailyExpenseForm::configure($schema);
