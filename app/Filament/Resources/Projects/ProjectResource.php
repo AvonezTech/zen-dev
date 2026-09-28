@@ -41,16 +41,10 @@ class ProjectResource extends Resource
             return $query;
         }
 
-        // If your database links projects to a single user via user_id column:
-        return $query->where('user_id', auth()->id());
-
-        // IF YOUR DATABASE USES A MANY-TO-MANY PIVOT TABLE FOR PROJECT MEMBERS, 
-        // DELETE THE LINE ABOVE AND UNCOMMENT THESE LINES INSTEAD:
-        /*
+        // Filters projects using the many-to-many relationship (fixes the user_id column error)
         return $query->whereHas('users', function (Builder $query) {
             $query->where('users.id', auth()->id());
         });
-        */
     }
 
     // Only admins can create new projects
